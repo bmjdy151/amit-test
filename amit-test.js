@@ -45,6 +45,16 @@ let frascoX8;
 let frascoY8;
 let frascoColor;
 
+//define handler variables
+let handlerPositionX;
+let handlerPositionY; 
+let handlerHeight;
+let handlerWidth;
+let handlerColor;
+let handlerMovement = 1;
+let handlerMaxWidth = 90;
+let handlerMinWidth = 50;
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -66,11 +76,11 @@ function setup() {
   
   //setup funnel
   topFunnelWidth = windowWidth/25;
-  topFunnelHeight =  windowHeight/4.5;
+  topFunnelHeight =  windowHeight/4;
   topFunnelPositionX = windowWidth/2 - topFunnelWidth/2; //center
-  topFunnelPositionY  = windowHeight/10;
+  topFunnelPositionY  = windowHeight/15;
   bottomFunnelX1= topFunnelPositionX +topFunnelWidth/3;
-  bottomFunnelY1= topFunnelPositionY*2.5; 
+  bottomFunnelY1= topFunnelPositionY*4; 
   bottomFunnelX2= bottomFunnelX1 +topFunnelWidth/3;
   bottomFunnelY2= bottomFunnelY1; 
   bottomFunnelX3= bottomFunnelX2;
@@ -92,11 +102,19 @@ function setup() {
   frascoY5 = frascoY3;
   frascoColor = color(216,214,214);
   
+  //setup handler
+  handlerWidth = windowWidth/12;
+  handlerHeight =  windowHeight/40;
+  handlerPositionX = bottomFunnelX2 + 10
+  handlerPositionY  = bottomFunnelY1 + (bottomFunnelY3 - bottomFunnelY1)/3;
+  handlerColor = color(255,255,255);
+  
 }
 
 function draw() {
-  // image(video, 0, 0);
-  if (switchState == "funnel") {
+   //If you want to show video image, uncomment the following line
+   //image(video, 0, 0);
+   if (switchState == "funnel") {
     fill(funnelColor);
     noStroke();
     //top funnel
@@ -133,7 +151,23 @@ function draw() {
      vertex(frascoX5, frascoY5);
     endShape(CLOSE);
     arc(frascoX4, frascoY5, 90, 35, 0, PI);
+  
+    //handler
+    fill(handlerColor);
+    strokeWeight(1);
+    stroke(51);
+    rect(handlerPositionX,handlerPositionY, handlerWidth, handlerHeight);
+    
+    if (handlerWidth >= handlerMaxWidth) {
+      handlerMovement = -handlerMovement;
+    }
+    else if (handlerWidth <= handlerMinWidth) {
+      handlerMovement = -handlerMovement;
+    }
+
+    handlerWidth = handlerWidth + handlerMovement;
   }
+
   
   //switch image based on gesture
   if(classificationResult == 'A' && triggeredA == false) {
@@ -146,7 +180,7 @@ function draw() {
    switchState = "funnelAndFrasco";
   }
   
-  print('cState:'+switchState+',tA:'+triggeredA+',tB:'+triggeredB);
+  print('cState:'+switchState+',tA:'+triggeredA+',tB:'+triggeredB+',move:'+handlerMovement);
   
 }
 
